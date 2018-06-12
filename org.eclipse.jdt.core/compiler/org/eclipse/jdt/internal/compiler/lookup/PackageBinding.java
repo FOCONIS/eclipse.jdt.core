@@ -45,6 +45,7 @@ public class PackageBinding extends Binding implements TypeConstants {
 
 protected PackageBinding() {
 	// for creating problem package
+	this.knownPackages = new HashtableOfPackage(1);	// normally 0
 }
 public PackageBinding(char[] topLevelPackageName, LookupEnvironment environment, ModuleBinding enclosingModule) {
 	this(new char[][] {topLevelPackageName}, null, environment, enclosingModule);
@@ -100,7 +101,7 @@ void addType(ReferenceBinding element) {
 	if (priorType != null && priorType.isUnresolvedType() && !element.isUnresolvedType()) {
 		((UnresolvedReferenceBinding) priorType).setResolvedType(element, this.environment);
 	}
-	if (this.environment.globalOptions.isAnnotationBasedNullAnalysisEnabled)
+	if (this.environment != null && this.environment.globalOptions.isAnnotationBasedNullAnalysisEnabled)
 		if (element.isAnnotationType() || element instanceof UnresolvedReferenceBinding) // unresolved types don't yet have the modifiers set
 			checkIfNullAnnotationType(element);
 
